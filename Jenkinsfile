@@ -12,7 +12,7 @@ pipeline {
     stage('Create project') {
     steps {
         sh """cd openshift
-oc login https://localhost:8443 --username developer --password developer --insecure-skip-tls-verify=true
+oc login https://localhost:8443 --username admin --password admin --insecure-skip-tls-verify=true
 if ! oc project ${projectName}
 then
   oc new-project ${projectName}
@@ -41,7 +41,7 @@ cp target/*.jar ../containers/petclinic"""
     stage('Build add or update Petclinic configuration') {
       steps {
         sh """cd openshift
-oc login https://localhost:8443 --username developer --password developer --insecure-skip-tls-verify=true
+oc login https://localhost:8443 --username admin --password admin --insecure-skip-tls-verify=true
 oc project ${projectName}
 oc apply -f petclinic-imagestream.yaml
 # oc apply -f petclinic-build.yaml
@@ -51,7 +51,7 @@ oc apply -f petclinic-route.yaml || echo 'Route already in place'"""
     }
     stage('Build Petclinic image') {
       steps {
-        sh """oc login https://localhost:8443 --username developer --password developer --insecure-skip-tls-verify=true
+        sh """oc login https://localhost:8443 --username admin --password admin --insecure-skip-tls-verify=true
 find .
 cd containers/petclinic
 # Delete old build first
@@ -65,7 +65,7 @@ oc start-build petclinic --from-dir . --follow"""
     stage('Deploy PetcClinic Container To Openshift') {
       steps {
         sh """cd openshift
-oc login https://localhost:8443 --username developer --password developer --insecure-skip-tls-verify=true
+oc login https://localhost:8443 --username admin --password admin --insecure-skip-tls-verify=true
 oc project ${projectName}
 oc apply -f petclinic-deploymentconfig.yaml"""
       }
